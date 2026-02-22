@@ -10,8 +10,6 @@ const sanitizeFilename = require('sanitize-filename')
 const dats = require('./dats.json')
 const request = require('request')
 const download = require('./download')
-const replaceAll = require('replace-string')
-const dateFormat = require('dateformat')
 
 async function start() {
 	await download()
@@ -115,7 +113,8 @@ function processDat(datsInfo, name, done) {
  * Construct a header for a DAT file.
  */
 function getHeader(name, pkg) {
-	const version = dateFormat(new Date(), "yyyy.mm.dd")
+	const now = new Date()
+	const version = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`
 	return `clrmamepro (
 	name "${path.basename(name)}"
 	description "${path.basename(name)}"
@@ -457,9 +456,10 @@ function cleanSerial(serial) {
 	if (!serial) {
 		return ''
 	}
-	let output = serial.trim()
-	output = replaceAll(output, ' ', '-')
-	output = replaceAll(output, '#', '')
+	let output = serial
+		.trim()
+		.replaceAll(' ', '-')
+		.replaceAll('#', '')
 	if (output.charAt(0) == '-') {
 		output = output.substr(1)
 	}
