@@ -28,49 +28,30 @@ start()
  * Verifies whether or not the entry is valid to be added to the DAT.
  */
 function validEntry(gameName) {
-	// Skip all BIOS files.
-	if (gameName.indexOf('[BIOS]') >= 0) {
-		return false
-	}
+	// Invalidate some of the entries.
+	const invalidSubstrings = [
+		'[BIOS]',
+		'[b]',
+		'(Test Program)',
+		' (Demo)',
+		'(Program)',
+		'- Program -',
+		'Test Cartridge',
+		'Super Nintendo Tester',
+		'Version Data',
+		'(System)',
+		'G. Darius (USA) (Beta)'
+	];
 
-	// Skip all bad dumps
-	if (gameName.indexOf('[b]') >= 0) {
-		return false
-	}
-
-	// Skip all demos and programs.
-	if (gameName.indexOf('(Test Program)') >= 0) {
-		return false
-	}
-	if (gameName.indexOf(' (Demo)') >= 0) {
-		return false
-	}
-	if (gameName.indexOf('(Program)') >= 0) {
-		return false
-	}
-	if (gameName.indexOf('- Program -') >= 0) {
-		return false
-	}
-	if (gameName.indexOf('Test Cartridge') >= 0) {
-		return false
-	}
-	if (gameName.indexOf('Super Nintendo Tester') >= 0) {
-		return false
-	}
-	if (gameName.indexOf('Version Data') >= 0) {
-		return false;
-	}
-	if (gameName.indexOf('(System)') >= 0) {
-		return false;
+	for (const substr of invalidSubstrings) {
+		if (gameName.includes(substr)) {
+			return false;
+		}
 	}
 
 	// The serial conflicts with Sonic Adventure 2
 	// https://github.com/libretro/libretro-database/issues/1444
 	if (gameName.indexOf('Phantasy Star Online') >= 0 && gameName.indexOf('(Rev B)') >= 0) {
-		return false
-	}
-
-	if (gameName.indexOf('G. Darius (USA) (Beta)') >= 0) {
 		return false
 	}
 
